@@ -7,4 +7,5 @@ git clone url(for cloning the repo to your system)
 git add . (to start tracking)
 git commit-m "Message"
 git push
+git pull at workstation
 #
