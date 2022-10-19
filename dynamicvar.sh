@@ -1,4 +1,4 @@
 #! bin/bash
 #dynamic variables declaring
-date="19/10/2022"
+date="$(date +%D)"
 echo "date is $date"
