@@ -15,9 +15,9 @@
 
 #Cyan              36                  46
 
-echo -e "\e[33m Pineapple \e[0m"
-echo -e "\e[31m apple \e[0m"
-echo -e "\e[32m watermelon \e[0m"
+echo -e "\e[41;33m Pineapple \e[0m"
+echo -e "\e[42;31m apple \e[0m"
+echo -e "\e[43;32m watermelon \e[0m"
 echo -e "\e[34m blue berry \e[0m"
 echo -e "\e[35m dragon fruit \e[0m"
 echo -e "\e[36m kiwi \e[0m"
