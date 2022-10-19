@@ -1,4 +1,4 @@
 #! bin/bash
 echo welcome to shellscripting-Mayukha
-echo line1
+echo I am learning good things
 echo this is used to print lines
