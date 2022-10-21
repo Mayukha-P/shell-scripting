@@ -3,17 +3,9 @@ a=abc
 sample()
 {
    
-   echo "calling stat"
-   stat
+echo "this is sample"
+   
 }
 echo "Calling sample"
 sample
-stat()
-{
-    read -p "Enter a number: " number
-   echo -e "number is: $NUM"
-    
 
-
-
-}
