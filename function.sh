@@ -10,9 +10,11 @@ sample
 stat()
 {
    
-    if [$number == 0];then
-    echo -e "number is null"
+    if ["$number" == "0"]; then
+    echo -e "\e[31m number is null \e[0m"
     else
-    echo -e "number is not null"
+    echo -e "\e[33m number is not null \e[0m"
     fi
+
+
 }
