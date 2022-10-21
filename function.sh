@@ -2,8 +2,7 @@
 a=abc
 sample()
 {
-   read -p "Enter a number: " NUM
-   echo -e "number is: $NUM"
+   
    echo "calling stat"
    stat
 }
@@ -11,7 +10,8 @@ echo "Calling sample"
 sample
 stat()
 {
-   
+    read -p "Enter a number: " number
+   echo -e "number is: $NUM"
     if [ $NUM -eq 0]; then
      echo -e "\e[31m number is null \e[0m"
     else
