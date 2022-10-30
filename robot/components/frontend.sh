@@ -1,5 +1,4 @@
-#!bin/bash
-
+#!/bin/bash 
 set -e 
 
 COMPONENT=frontend
@@ -30,7 +29,16 @@ echo -n "Conifuring the reverse proxy file:"
 mv localhost.conf /etc/nginx/default.d/roboshop.conf
 stat $?
 
+for component in catalogue cart user shipping payment; do
+    echo -n "Configuring Reverse Proxy : "
+    sed -i -e "/$component/s/localhost/$component.robot.internal/"  /etc/nginx/default.d/roboshop.conf 
+    stat $?
+done
+
 echo -n "Starting Frontend Service:"
 systemctl enable nginx &>> $LOGFILE
-systemctl start nginx &>> $LOGFILE
+systemctl daemon-reload &>> $LOGFILE
+systemctl restart nginx &>> $LOGFILE
 stat $?
+
+

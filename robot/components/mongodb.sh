@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash 
 set -e 
 
 # Verify the script is been executed as a root user or not.

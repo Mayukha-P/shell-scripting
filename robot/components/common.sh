@@ -15,6 +15,8 @@ stat() {
         echo -e "\e[31m Failure \e[0m"
     fi 
 }
+
+
 NODEJS() {
     echo -n "Configuring Node JS:"
     curl -sL https://rpm.nodesource.com/setup_lts.x | bash   &>> $LOGFILE
@@ -35,8 +37,52 @@ NODEJS() {
 
     # Configures Services
     CONFIGURE_SERVICE
+}
+
+MAVEN() {
+    echo -n "Installing Maven:"
+    yum install maven -y &>> $LOGFILE
+    stat $? 
+
+    # Calling create_user function
+    CREATE_USER
+
+    # Downloading the code
+    DOWNLOAD_AND_EXTRACT 
+
+    # Performs mvn install 
+    MVN_INSTALL
+
+    # Configures Services
+    CONFIGURE_SERVICE
+}
+
+PYTHON() {
+    echo -n "Installing Python36 and other dependencies:"
+    yum install python36 gcc python3-devel -y &>> $LOGFILE
+    stat $? 
+
+    # Calling create_user function
+    CREATE_USER    
+
+    # Downloading the code
+    DOWNLOAD_AND_EXTRACT 
+
+    USERID=$(id -u roboshop)
+    GROUPID=$(id -g roboshop)
+
+    cd /home/$APPUSER/$COMPONENT/
+    pip3 install -r requirements.txt &>> $LOGFILE
+    
+    echo -n "Updating the uid and gid with $APPUSER in $PAYMENT.ini : "
+    sed -i -e "/^uid/ c uid=$USERID"  -e "/^gid/ c gid=$GROUPID" /home/$APPUSER/$COMPONENT/$COMPONENT.ini 
+    stat $?
+
+    # Configures Services
+    CONFIGURE_SERVICE
 
 }
+
 
 CREATE_USER() {
     id $APPUSER &>> $LOGFILE 
@@ -70,14 +116,23 @@ NPM_INSTALL() {
     stat $?
 }
 
+MVN_INSTALL() {
+    echo -n "Installing $COMPONENT Dependencies: "
+    cd $COMPONENT 
+    mvn clean package &>> $LOGFILE
+     mv target/$COMPONENT-1.0.jar $COMPONENT.jar
+    stat $?
+}
+
 CONFIGURE_SERVICE() {
     echo -n "Configuring $COMPONENT Service:"
-    sed -i  -e 's/REDIS_ENDPOINT/redis.robot.internal/' -e 's/CATALOGUE_ENDPOINT/catalogue.robot.internal/' -e 's/MONGO_DNSNAME/mongodb.robot.internal/' -e 's/MONGO_ENDPOINT/mongodb.robot.internal/' -e 's/REDIS_ENDPOINT/redis.robot.internal/' /home/roboshop/$COMPONENT/systemd.service
+    sed -i -e 's/AMQPHOST/rabbitmq.robot.internal/' -e 's/USERHOST/user.robot.internal/' -e 's/CARTHOST/cart.robot.internal/' -e 's/DBHOST/mysql.robot.internal/' -e 's/CARTENDPOINT/cart.robot.internal/' -e 's/REDIS_ENDPOINT/redis.robot.internal/' -e 's/CATALOGUE_ENDPOINT/catalogue.robot.internal/' -e 's/MONGO_DNSNAME/mongodb.robot.internal/' -e 's/MONGO_ENDPOINT/mongodb.robot.internal/' -e 's/REDIS_ENDPOINT/redis.robot.internal/' /home/roboshop/$COMPONENT/systemd.service
     mv /home/$APPUSER/$COMPONENT/systemd.service /etc/systemd/system/$COMPONENT.service
     stat $? 
 
     echo -n "Starting $COMPONENT Service:"
     systemctl daemon-reload &>> $LOGFILE
+    systemctl enable $COMPONENT
     systemctl restart $COMPONENT &>> $LOGFILE
     stat $? 
 }
