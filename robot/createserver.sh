@@ -1,6 +1,6 @@
 #!bin/bash
 if [ -z "$1" ]; then 
-    echo -e "\e[31m Component name is required \n example usage is: \n\t \e[33m bash create-server.sh componentName\e[0m \e[0m"   
+    echo -e "\e[31m ***COMPONENT REQUIRED*** \n\e[0m \e[33m example usage is:\t bash create-server.sh componentName\e[0m "   
     exit 1 
 fi 
 COMPONENT=$1
