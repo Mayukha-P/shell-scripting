@@ -20,4 +20,11 @@ sed -e "s/IPADDRESS/${PRIVATE_IP}/" -e "s/COMPONENT/$COMPONENT/" route53.json > 
     aws route53 change-resource-record-sets --hosted-zone-id $ZONE_ID --change-batch file:///tmp/dns.json | jq 
 } 
 
-createserver
+if [ "$1" == "all" ]; then 
+    for component in frontend catalogue cart user shipping payment mongodb mysql rabbitmq redis; do 
+        COMPONENT=$component
+        createServer
+    done 
+else 
+        createServer 
+fi 
