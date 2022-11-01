@@ -9,4 +9,4 @@ SGID="$(aws ec2 describe-security-groups   --filters Name=group-name,Values=b51-
 echo "AMI ID Used to launch instance is : $AMIID"
 echo "SG ID Used to launch instance is : $SGID"
 echo $COMPONENT
-aws ec2 run-instances --image-id $AMIID --instance-type t2.micro --security-group-ids $SGID --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=${COMPONENT}}]"| jq 
+aws ec2 run-instances --image-id $AMIID --instance-type t2.micro --security-group-ids $SGID  --instance-market-options "MarketType=spot, SpotOptions={SpotInstanceType=persistent,InstanceInterruptionBehavior=stop}" --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=${COMPONENT}}]"| jq 
